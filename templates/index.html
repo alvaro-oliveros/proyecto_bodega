@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}Productos disponibles{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-4 text-gray-800">Productos disponibles</h1>
+
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Inventario</h6>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th>Producto</th>
+            <th>Stock</th>
+            <th>Unidad</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in productos %}
+          <tr class="{% if p['stock'] <= 10 %}table-danger{% elif p['stock'] <= 20 %}table-warning{% else %}table-success{% endif %}">
+            <td>{{ p['nombre'] }}</td>
+            <td>{{ '%.2f'|format(p['stock']) }}</td>
+            <td>{{ p['unidad'] }}</td>
+            <td>
+              <a class="btn btn-sm btn-success" href="{{ url_for('form_vender', producto_id=p['id']) }}">Vender</a>
+              {% if session['rol'] == 'admin' %}
+              <a class="btn btn-sm btn-warning" href="{{ url_for('editar', id=p['id']) }}">Editar</a>
+              <form action="{{ url_for('eliminar', id=p['id']) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
