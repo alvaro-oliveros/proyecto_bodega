@@ -42,14 +42,14 @@ def create_tables():
     cursor.execute("SELECT COUNT(*) AS total FROM productos")
     if cursor.fetchone()["total"] == 0:
         productos = [
-            ('Arroz', 10.0, 'kg'),
-            ('Papa amarilla', 8.0, 'kg'),
-            ('Papa blanca', 8.0, 'kg'),
-            ('Cebolla', 5.0, 'kg'),
-            ('Tomate', 5.0, 'kg'),
-            ('Limón', 3.0, 'kg'),
+            ('Arroz', 'Blanco', 11.90, 10.0, 'kg'),
+            ('Papa amarilla', '', 3.2, 8.0, 'kg'),
+            ('Papa blanca', '', 2.8, 8.0, 'kg'),
+            ('Cebolla', 'Blanca', 5.5, 5.0, 'kg'),
+            ('Tomate', 'Italiano', 8.0, 5.0, 'kg'),
+            ('Limón', 'Tahiti', 4.9, 3.0, 'kg'),
         ]
-        cursor.executemany("INSERT INTO productos (nombre, stock, unidad) VALUES (%s, %s, %s)", productos)
+        cursor.executemany("INSERT INTO productos (nombre, descripcion, precio, stock, unidad) VALUES (%s, %s, %s, %s, %s)", productos)
 
     # Crear tabla usuarios
     cursor.execute("""
