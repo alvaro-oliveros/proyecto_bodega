@@ -1,12 +1,13 @@
-# Ignorar entorno virtual
+# Entorno virtual
 env/
-venv/
-ENV/
-*.pyc
+
+# Archivos Python temporales
 __pycache__/
+*.pyc
 
-# Archivos del sistema/macOS
+# Archivos sensibles
+.env
+instance/
+
+# Archivos del sistema (Mac)
 .DS_Store
-
-# Archivos temporales
-*.log
