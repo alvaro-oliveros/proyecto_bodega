@@ -57,8 +57,11 @@ def create_tables():
             if cursor.fetchone()["total"] == 0:
                 productos = [
                     ('Arroz', 'Blanco', 11.90, 10.0, 'kg'),
-                    ('Papa amarilla', '', 3.2, 8.0, 'kg'),
-                    # ... otros productos
+                    ('Papa amarilla', 'Sin descripción', 3.2, 8.0, 'kg'),
+                    ('Papa blanca', 'Sin descripción', 2.8, 8.0, 'kg'),
+                    ('Cebolla', 'Blanca', 5.5, 5.0, 'kg'),
+                    ('Tomate', 'Italiano', 8.0, 5.0, 'kg'),
+                    ('Limón', 'Tahiti', 4.9, 3.0, 'kg'),
                 ]
                 cursor.executemany(
                     "INSERT INTO productos (nombre, descripcion, precio, stock, unidad) VALUES (%s, %s, %s, %s, %s)",

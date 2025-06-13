@@ -1,6 +1,8 @@
 from flask import render_template, request, redirect, session, url_for, flash
 from functools import wraps
 from models import get_productos, conectar_db, eliminar_producto
+from werkzeug.security import check_password_hash
+
 
 def init_routes(app):
     def login_required(f):
@@ -18,11 +20,13 @@ def init_routes(app):
             password = request.form["password"]
             db = conectar_db()
             cursor = db.cursor()
-            cursor.execute("SELECT id, rol FROM usuarios WHERE username = %s AND password = %s", (usuario, password))
+            
+            # Primero buscar solo por nombre de usuario
+            cursor.execute("SELECT id, password, rol FROM usuarios WHERE username = %s", (usuario,))
             resultado = cursor.fetchone()
             db.close()
 
-            if resultado:
+            if resultado and check_password_hash(resultado["password"], password):
                 session["user_id"] = resultado["id"]
                 session["username"] = usuario
                 session["rol"] = resultado["rol"]

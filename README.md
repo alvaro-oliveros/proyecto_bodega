@@ -14,12 +14,16 @@ Sistema web simple hecho en Flask + MySQL para gestionar inventario de productos
 - Flask
 - PyMySQL
 
-## Instalación
+## Paso Previo
+Tener el xampp con mysql
+cd C:\xampp\mysql\bin
+mysql -u root -p
 
+## Instalación
 ```bash
 git clone https://github.com/alvaro-oliveros/proyecto_bodega.git
 cd stock-bodega
-python3 -m venv env # py -m venv (Windows)
+python3 -m venv env # py -m venv env (Windows)
 source env/bin/activate  # env\Scripts\activate (Windows)
 pip install -r requirements.txt
-python app.py
+python app.py # py app.py
