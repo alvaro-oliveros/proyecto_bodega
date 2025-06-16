@@ -71,7 +71,13 @@ def init_routes(app):
             cursor.execute("UPDATE productos SET stock = stock - %s WHERE id = %s", (cantidad, producto_id))
             conn.commit()
             flash(f"Se vendieron {cantidad} unidades.")
-
+            
+            # Verifica stock bajo y envía alerta
+            cursor.execute("SELECT nombre, stock, unidad FROM productos WHERE id = %s", (producto_id,))
+            producto = cursor.fetchone()
+            if producto['stock'] <= 5:
+                mensaje = f"⚠ ALERTA: El stock de {producto['nombre']} es bajo ({producto['stock']} {producto['unidad']})"
+                enviar_alerta_whatsapp(NUMERO_ADMIN, mensaje, API_KEY)
         conn.close()
         return redirect(url_for('index'))
     
@@ -121,6 +127,12 @@ def init_routes(app):
                 (nuevo_nombre, nuevo_descripcion, nuevo_precio, nuevo_stock, nueva_unidad, id)
             )
             conn.commit()
+            cursor.execute("SELECT nombre, stock, unidad FROM productos WHERE id = %s", (id,))
+            producto = cursor.fetchone()
+            if producto['stock'] <= 5:
+                mensaje = f"⚠ ALERTA: El stock de {producto['nombre']} es bajo ({producto['stock']} {producto['unidad']})"
+                enviar_alerta_whatsapp(NUMERO_ADMIN, mensaje, API_KEY)
+
             conn.close()
             return redirect(url_for('index'))
         
@@ -133,7 +145,11 @@ def init_routes(app):
             return redirect(url_for('index'))
         eliminar_producto(id)
         return redirect(url_for("index"))
-
+    
+    from utils.whatsapp_alert import enviar_alerta_whatsapp
+    # Configura tu número y api_key
+    NUMERO_ADMIN = "+51989014501"  # Cambia por tu número
+    API_KEY = "7178632"        # La que te dio CallMeBot
 
     @app.route("/logout")
     def logout():
