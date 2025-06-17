@@ -36,11 +36,23 @@ def create_tables():
                     precio DECIMAL(10,2) NOT NULL,  # Mejor tipo para dinero
                     stock DECIMAL(10,2) NOT NULL,
                     unidad VARCHAR(10) NOT NULL,
+                    categoria VARCHAR(100) DEFAULT NULL,
                     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 )
             """)
-
+            # Tabla movimientos
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS movimientos (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    producto_id INT NOT NULL,
+                    cantidad DECIMAL(10,2) NOT NULL, -- Positivo o negativo según el tipo
+                    precio DECIMAL(10,2),            -- Precio de la transacción (puede ser NULL en ajustes)
+                    tipo ENUM('venta', 'reabastecimiento', 'ajuste', 'agregado') NOT NULL,
+                    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (producto_id) REFERENCES productos(id)
+                );
+            """)
             # Tabla usuarios con contraseñas hasheadas
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS usuarios (

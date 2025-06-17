@@ -31,13 +31,15 @@
             <td>{{ '%.2f'|format(p['stock']) }}</td>
             <td>{{ p['unidad'] }}</td>
             <td>
-              <a class="btn btn-sm btn-success" href="{{ url_for('form_vender', producto_id=p['id']) }}">Vender</a>
-              {% if session['rol'] == 'admin' %}
-              <a class="btn btn-sm btn-warning" href="{{ url_for('editar', id=p['id']) }}">Editar</a>
-              <form action="{{ url_for('eliminar', id=p['id']) }}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+              <form action="{{ url_for('procesar_accion_producto', producto_id=p['id']) }}" method="post" style="display:inline;">
+                <input type="number" name="cantidad" step="0.01" min="0.01" placeholder="Cantidad" required>
+                <button type="submit" name="accion" value="vender" class="btn btn-sm btn-success">Vender</button>
+                <button type="submit" name="accion" value="reabastecer" class="btn btn-sm btn-primary">Reabastecer</button>
+                <a class="btn btn-sm btn-warning" href="{{ url_for('editar', id=p['id']) }}">Editar</a>
+                <form action="{{ url_for('eliminar', id=p['id']) }}" method="post" style="display:inline;">
+                  <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                </form>
               </form>
-              {% endif %}
             </td>
           </tr>
           {% endfor %}

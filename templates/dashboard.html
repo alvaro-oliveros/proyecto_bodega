@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="container py-4">
+
+  <h1 class="mb-4">Dashboard</h1>
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <div class="card text-bg-primary">
+        <div class="card-body">
+          <h5 class="card-title">Total Ventas</h5>
+          <p class="card-text">S/ {{ total_ventas }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card text-bg-warning">
+        <div class="card-body">
+          <h5 class="card-title">Stock Bajo</h5>
+          <p class="card-text">{{ stock_bajo }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card text-bg-success">
+        <div class="card-body">
+          <h5 class="card-title">Productos</h5>
+          <p class="card-text">{{ total_productos }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6 mb-4">
+      <canvas id="ventasLine"></canvas>
+    </div>
+    <div class="col-lg-6 mb-4">
+      <canvas id="stockDona"></canvas>
+    </div>
+  </div>
+
+  <h3>Últimos Movimientos</h3>
+    <table class="table table-striped">
+    <thead>
+        <tr>
+        <th>Fecha</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Tipo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in movimientos %}
+        <tr>
+        <td>{{ m.fecha }}</td>
+        <td>{{ m.nombre }}</td>
+        <td>{{ m.cantidad }}</td>
+        <td>{{ m.tipo }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+
+  <script>
+    const ventasData = {
+      labels: {{ ventas_diarias | map(attribute='fecha') | list | tojson }},
+      datasets: [{
+        label: 'Ventas',
+        data: {{ ventas_diarias | map(attribute='total') | list | tojson }},
+        borderColor: 'blue',
+        fill: false
+      }]
+    };
+    new Chart(document.getElementById('ventasLine'), {
+      type: 'line',
+      data: ventasData
+    });
+
+    const stockData = {
+      labels: {{ stock_por_categoria | map(attribute='categoria') | list | tojson }},
+      datasets: [{
+        data: {{ stock_por_categoria | map(attribute='total_stock') | list | tojson }},
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+      }]
+    };
+    new Chart(document.getElementById('stockDona'), {
+      type: 'doughnut',
+      data: stockData
+    });
+  </script>
+
+</body>
+</html>
